@@ -9,14 +9,6 @@ struct DirLight {
 	vec4 specular;
 };
 
-vec4 CalcDirLight(
-		DirLight light,
-		vec3 normal,
-		vec3 viewDir,
-		vec4 diffuse,
-		float specular
-	);
-
 // A point light
 struct PointLight {
 	vec4 position;
@@ -30,15 +22,6 @@ struct PointLight {
 	float quadratic;
 };
 
-vec4 CalcPointLight(
-		PointLight light,
-		vec3 normal,
-		vec3 viewDir,
-		vec3 fragPos,
-		vec4 diffuse,
-		float specular
-	);
-
 // A spotlight
 struct SpotLight {
 	vec4 position;
@@ -51,6 +34,23 @@ struct SpotLight {
 	float cutOff;
 	float outerCutOff;
 };
+
+vec4 CalcDirLight(
+		DirLight light,
+		vec3 normal,
+		vec3 viewDir,
+		vec4 diffuse,
+		float specular
+	);
+
+vec4 CalcPointLight(
+		PointLight light,
+		vec3 normal,
+		vec3 viewDir,
+		vec3 fragPos,
+		vec4 diffuse,
+		float specular
+	);
 
 vec4 CalcSpotLight(
 		SpotLight light,
@@ -103,7 +103,7 @@ void main() {
 
 	result += CalcPointLight(light, norm, viewDir, fragPos, diffuse, specular);
 
-	Target0 = result;
+	Target0 = vec4(result.xyz, 1.0);
 }
 
 vec4 CalcDirLight(
