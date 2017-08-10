@@ -7,6 +7,10 @@ struct DirLight {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
+
+	int enabled;
+
+	vec3 _padding;
 };
 
 // A point light
@@ -20,6 +24,8 @@ struct PointLight {
 	float constant;
 	float linear;
 	float quadratic;
+
+	int enabled;
 };
 
 // A spotlight
@@ -33,6 +39,10 @@ struct SpotLight {
 
 	float cutOff;
 	float outerCutOff;
+
+	int enabled;
+
+	float _padding;
 };
 
 vec4 CalcDirLight(
@@ -77,6 +87,20 @@ uniform u_Material {
 	float u_Material_shininess;
 };
 
+#define MAX_LIGHTS 8
+
+uniform u_DirLights {
+	DirLight dirLights[MAX_LIGHTS];
+};
+
+uniform u_PointLights {
+	PointLight pointLights[MAX_LIGHTS];
+};
+
+uniform u_SpotLights {
+	SpotLight spotLights[MAX_LIGHTS];
+};
+
 void main() {
 	// Get data from geometry buffer
 	vec3 fragPos = texture(t_Position, v_Uv).xyz;;
@@ -87,21 +111,30 @@ void main() {
 
 	vec3 viewDir = normalize(vec3(u_EyePos) - fragPos);
 
-	PointLight light;
-
-	light.position = vec4(5.0, 3.0, 6.5, 1.0);
-
-	light.ambient = vec4(0.1, 0.1, 0.1, 1.0);
-	light.diffuse = vec4(1.0, 1.0, 1.0, 1.0);
-	light.specular = vec4(1.0, 1.0, 1.0, 1.0);
-
-	light.constant = 1.0;
-	light.linear = 0.14;
-	light.quadratic = 0.07;
-
 	vec4 result = vec4(0.0, 0.0, 0.0, 1.0);
 
-	result += CalcPointLight(light, norm, viewDir, fragPos, diffuse, specular);
+	int i;
+
+	// Calculate directional lights
+	for (i = 0; i < MAX_LIGHTS; i++) {
+		if (dirLights[i].enabled == 1) {
+			result += CalcDirLight(dirLights[i], norm, viewDir, diffuse, specular);
+		}
+	}
+
+	// Calculate point lights
+	for (i = 0; i < MAX_LIGHTS; i++) {
+		if (pointLights[i].enabled == 1) {
+			result += CalcPointLight(pointLights[i], norm, viewDir, fragPos, diffuse, specular);
+		}
+	}
+	
+	// Calculate spot lights
+	for (i = 0; i < MAX_LIGHTS; i++) {
+		if (spotLights[i].enabled == 1) {
+			result += CalcSpotLight(spotLights[i], norm, viewDir, fragPos, diffuse, specular);
+		}
+	}
 
 	Target0 = vec4(result.xyz, 1.0);
 }
