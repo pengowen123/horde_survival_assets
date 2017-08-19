@@ -1,4 +1,5 @@
 #version 330 core
+// TODO: try to make this work on 150
 
 in vec3 v_FragPos;
 in vec3 v_Normal;
