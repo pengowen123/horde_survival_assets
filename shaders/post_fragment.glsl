@@ -25,17 +25,16 @@ void main() {
 	);
 
 	float kernel[9] = float[](
-		1.0 / 16, 2.0 / 16, 1.0 / 16,
-		2.0 / 16, 4.0 / 16, 2.0 / 16,
-		1.0 / 16, 2.0 / 16, 1.0 / 16  
-	);
+		-0.0, -0.0, -0.0,
+		-0.0, 1.0, -0.0,
+		-0.0, -0.0, -0.0
+    );
 
 	vec3 sampleTex[9];
 
 	for (int i = 0; i < 9; i++) {
-		// TODO: fix this
-		//vec4 colorSample = texelFetch(t_Screen, v_Uv.xy + offsets[i], 1);
-		//sampleTex[i] = vec3(colorSample);
+		vec4 colorSample = texture(t_Screen, v_Uv.xy + offsets[i]);
+		sampleTex[i] = vec3(colorSample);
 	}
 
 	vec3 color = vec3(0.0);
@@ -45,9 +44,6 @@ void main() {
 	}
 
 	Target0 = vec4(color, 1.0);
-	// Postprocessing disabled for now
-	// TODO: take screen dimensions as a uniform
-	Target0 = texture(t_Screen, v_Uv);
 
 	// Apply gamma correction
 	// TODO: make this a setting
