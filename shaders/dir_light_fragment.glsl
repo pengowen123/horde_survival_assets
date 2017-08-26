@@ -1,5 +1,7 @@
 #version 150 core
 
+#include "sampling.glslh"
+
 struct DirLight {
 	vec4 direction;
 
@@ -86,36 +88,27 @@ vec4 CalcDirLight(
 	vec4 specular = light.specular * (spec * t_specular);
 
 	// Sum all lights and apply shadows
-	return (ambient + (diffuse + specular) * (1.0 - shadowFactor));
+	return (ambient + (diffuse + specular) * shadowFactor);
 }
 
+// Returns 1.0 if the provided position is in a shadow from the provided light, or 0.0 otherwise
 float ShadowFactor(DirLight light, vec4 fragPosLightSpace, vec3 normal) {
 	vec3 lightDir = normalize(-light.direction.xyz);
 
 	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
 	projCoords = projCoords * 0.5 + 0.5;
 
-	float currentDepth = projCoords.z;
-
 	// TODO: Fix peter panning
 	float bias = max(0.01 * (1.0 - dot(normal, lightDir)), 0.001);
+	float depth = projCoords.z - bias;
 
-	// Apply PCF to soften shadows
-	float shadow = 0.0;
 	vec2 texelSize = 1.0 / textureSize(t_ShadowMap, 0);
-
-	for (int x = -1; x <= 1; ++x) {
-		for (int y = -1; y <= 1; ++y) {
-			float pcfDepth = texture(t_ShadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
-			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
-		}
-	}
-
-	shadow /= 9.0;
+	float shadow = SampleShadowMapLinear(t_ShadowMap, projCoords.xy, depth, texelSize);
 
 	// FIXME: this doesn't work if set to 1.0
+	//		  maybe this is intended though
 	if (projCoords.z > 0.5) {
-		shadow = 0.0;
+		shadow = 1.0;
 	}
 
 	return shadow;
