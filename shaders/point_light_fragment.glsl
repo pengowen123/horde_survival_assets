@@ -11,7 +11,7 @@ struct PointLight {
 	float linear;
 	float quadratic;
 
-	int enabled;
+	float _padding0;
 };
 
 vec4 CalcPointLight(

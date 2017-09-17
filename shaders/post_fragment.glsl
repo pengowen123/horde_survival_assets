@@ -45,9 +45,6 @@ void main() {
 
 	Target0 = vec4(color, 1.0);
 
-	// Apply gamma correction
-	// TODO: make this a setting
-	float gamma = 2.2;
-	Target0.rgb = pow(Target0.rgb, vec3(2.2 / gamma));
+	//Target0 = vec4(vec3(color.r), 1.0);
 }
 

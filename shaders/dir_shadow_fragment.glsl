@@ -1,5 +1,7 @@
 #version 330
 
+//out vec4 Target0;
+
 void main() {
-	// Only the depth is needed, so nothing needs to be done here
+	//Target0 = vec4(gl_FragCoord.z, 0.0, 0.0, 0.0);
 }

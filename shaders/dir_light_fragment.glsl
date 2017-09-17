@@ -9,9 +9,7 @@ struct DirLight {
 	vec4 diffuse;
 	vec4 specular;
 
-	int enabled;
-
-	vec3 _padding;
+	vec3 _padding0;
 };
 
 vec4 CalcDirLight(
@@ -91,7 +89,7 @@ vec4 CalcDirLight(
 	return (ambient + (diffuse + specular) * shadowFactor);
 }
 
-// Returns 1.0 if the provided position is in a shadow from the provided light, or 0.0 otherwise
+// Returns 0.0 if the provided position is in a shadow from the provided light, or 1.0 otherwise
 float ShadowFactor(DirLight light, vec4 fragPosLightSpace, vec3 normal) {
 	vec3 lightDir = normalize(-light.direction.xyz);
 
