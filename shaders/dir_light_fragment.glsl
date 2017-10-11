@@ -8,8 +8,6 @@ struct DirLight {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
-
-	vec3 _padding0;
 };
 
 vec4 CalcDirLight(
@@ -56,6 +54,7 @@ void main() {
 	vec3 viewDir = normalize(vec3(u_EyePos) - fragPos);
 
 	float shadow_factor = ShadowFactor(light[0], u_LightSpaceMatrix * vec4(fragPos, 1.0), norm);
+
 	vec3 light_addition = CalcDirLight(light[0], norm, viewDir, diffuse, specular, shadow_factor).xyz;
 	vec3 result = texture(t_Target, v_Uv).xyz + light_addition;
 

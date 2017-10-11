@@ -2,8 +2,11 @@
 
 in vec4 FragPos;
 
-uniform vec3 lightPos;
-uniform float farPlane;
+uniform u_Locals {
+	mat4 model;
+	vec3 lightPos;
+	float farPlane;
+};
 
 void main() {
 	// Get distance between fragment and light
@@ -12,6 +15,5 @@ void main() {
 	// Normalize to 0 to 1 range
 	lightDistance = lightDistance / farPlane;
 
-	//gl_FragDepth = lightDistance;
-	gl_FragDepth = farPlane;
+	gl_FragDepth = lightDistance;
 }

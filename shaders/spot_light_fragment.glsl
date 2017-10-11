@@ -10,8 +10,6 @@ struct SpotLight {
 
 	float cutOff;
 	float outerCutOff;
-
-	float _padding0;
 };
 
 vec4 CalcSpotLight(
