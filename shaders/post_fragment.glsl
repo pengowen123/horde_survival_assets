@@ -44,7 +44,4 @@ void main() {
 	}
 
 	Target0 = vec4(color, 1.0);
-
-	//Target0 = vec4(vec3(color.r), 1.0);
 }
-

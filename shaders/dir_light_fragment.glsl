@@ -102,9 +102,7 @@ float ShadowFactor(DirLight light, vec4 fragPosLightSpace, vec3 normal) {
 	vec2 texelSize = 1.0 / textureSize(t_ShadowMap, 0);
 	float shadow = SampleShadowMapLinear(t_ShadowMap, projCoords.xy, depth, texelSize);
 
-	// FIXME: this doesn't work if set to 1.0
-	//		  maybe this is intended though
-	if (projCoords.z > 0.5) {
+	if (projCoords.z > 1.0) {
 		shadow = 1.0;
 	}
 
