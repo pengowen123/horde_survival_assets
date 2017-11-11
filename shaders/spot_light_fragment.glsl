@@ -43,7 +43,6 @@ uniform sampler2D t_Target;
 uniform u_Locals {
 	vec4 u_EyePos;
 	mat4 u_LightSpaceMatrix;
-	float u_FarPlane;
 };
 
 uniform u_Material {
