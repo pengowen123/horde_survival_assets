@@ -1,6 +1,6 @@
 #version 150 core
 
-#include "sampling.glslh"
+#include "sampling"
 
 struct SpotLight {
 	vec4 position;
