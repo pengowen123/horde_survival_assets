@@ -1,5 +1,3 @@
-// This vertex shader is shared by all light types
-
 #version 150 core
 
 in vec2 a_Pos;

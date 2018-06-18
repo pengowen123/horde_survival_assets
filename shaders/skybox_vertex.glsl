@@ -1,18 +1,19 @@
-#version 150 core
-
-in vec3 a_Pos;
-
-out vec3 v_Uv;
+#version 330
 
 uniform u_Locals {
-	mat4 u_ViewProj;
+	mat4 u_Proj;
+	mat4 u_View;
 };
 
+in vec4 a_Pos;
+
+smooth out vec3 v_EyeDirection;
+
 void main() {
-	v_Uv = a_Pos;
+    mat4 inverseProj = inverse(u_Proj);
+    mat3 inverseView = transpose(mat3(u_View));
+    vec3 unprojected = (inverseProj * a_Pos).xyz;
+    v_EyeDirection = inverseView * unprojected;
 
-	vec4 pos = u_ViewProj * vec4(a_Pos, 1.0);
-	gl_Position = pos.xyww;
-}
-
-// vim: ft=glsl
+    gl_Position = vec4(a_Pos.xy, 1.0, 1.0);
+} 

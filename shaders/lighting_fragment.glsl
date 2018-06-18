@@ -1,0 +1,105 @@
+// Lighting pass shader
+//
+// The implementation of lighting calculations for each light type are in their respective shaders
+
+#version 150 core
+
+#define MAX_DIR_LIGHTS 4
+#define MAX_POINT_LIGHTS 4
+#define MAX_SPOT_LIGHTS 4
+
+in vec2 v_Uv;
+
+uniform sampler2D t_Position;
+uniform sampler2D t_Normal;
+uniform sampler2D t_Color;
+
+uniform u_Locals {
+	vec4 u_EyePos;
+};
+
+uniform u_Material {
+	float u_Material_shininess;
+};
+
+#include "sampling"
+#include "dir_light"
+#include "point_light"
+#include "spot_light"
+
+uniform u_DirLights {
+	DirLight dirLights[MAX_DIR_LIGHTS];
+};
+
+uniform u_PointLights {
+	PointLight pointLights[MAX_POINT_LIGHTS];
+};
+
+uniform u_SpotLights {
+	SpotLight spotLights[MAX_SPOT_LIGHTS];
+};
+
+out vec4 Target0;
+
+void main() {
+	// Get data from geometry buffer
+ 	vec3 fragPos = texture(t_Position, v_Uv).xyz;;
+ 	vec3 norm = texture(t_Normal, v_Uv).xyz;
+ 	vec4 color = texture(t_Color, v_Uv);
+ 	vec4 diffuse = vec4(color.rgb, 1.0);
+ 	float specular = color.a;
+ 
+ 	vec3 viewDir = normalize(vec3(u_EyePos) - fragPos);
+ 
+ 	vec4 result = vec4(0.0, 0.0, 0.0, 1.0);
+ 
+ 	int i;
+ 
+ 	// Calculate directional lights
+ 	for (i = 0; i < MAX_DIR_LIGHTS; i++) {
+		float shadowFactor = 1.0;
+ 		vec4 light = CalcDirLight(
+				dirLights[i],
+				norm,
+				viewDir,
+				diffuse,
+				specular,
+				1.0
+			);
+		result += light * dirLights[i].enabled;
+ 	}
+ 
+ 	// Calculate point lights
+ 	for (i = 0; i < MAX_POINT_LIGHTS; i++) {
+		float shadowFactor = 1.0;
+		vec4 light = CalcPointLight(
+				pointLights[i],
+				norm,
+				viewDir,
+				fragPos,
+				diffuse,
+				specular,
+				1.0
+			);
+		result += light * pointLights[i].enabled;
+ 	}
+ 	
+ 	// Calculate spot lights
+ 	for (i = 0; i < MAX_SPOT_LIGHTS; i++) {
+		float shadowFactor = 1.0;
+		vec4 light = CalcSpotLight(
+				spotLights[i],
+				norm,
+				viewDir,
+				fragPos,
+				diffuse,
+				specular,
+				shadowFactor
+			);
+		
+		result += light * spotLights[i].enabled;
+ 	}
+ 
+ 	Target0 = vec4(result.xyz, 1.0);
+	Target0.xyz = diffuse.xyz;
+}

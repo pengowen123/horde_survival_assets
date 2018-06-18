@@ -1,3 +1,5 @@
+// Texture sampling utilities
+
 float SampleShadowMap(sampler2D shadowMap, vec2 coords, float compare) {
 	return step(compare, texture(shadowMap, coords).r);
 }
