@@ -15,6 +15,8 @@ struct SpotLight {
 	float outerCutOff;
 
 	float enabled;
+
+	vec2 _padding;
 };
     
 vec4 CalcSpotLight(
@@ -66,25 +68,3 @@ vec4 CalcSpotLight(
 	// Sum all lights and apply shadows
 	return (ambient + (diffuse + specular) * shadowFactor);
 }
-
-/*// Returns 0.0 if the provided position is in a shadow from the provided light, or 1.0 otherwise*/
-//float ShadowFactor(SpotLight light, vec4 fragPosLightSpace, vec3 normal) {
-	//vec3 lightDir = normalize(-light.direction.xyz);
-
-	//vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-	//projCoords = projCoords * 0.5 + 0.5;
-
-	//// TODO: Fix peter panning
-	//float bias = max(0.01 * (1.0 - dot(normal, lightDir)), 0.001);
-	//float depth = projCoords.z - bias;
-
-	//vec2 texelSize = 1.0 / textureSize(t_ShadowMap, 0);
-
-	//float shadow = SampleShadowMapLinear(t_ShadowMap, projCoords.xy, depth, texelSize);
-
-	//if (projCoords.z > 1.0) {
-		//shadow = 1.0;
-	//}
-
-	//return shadow;
-/*}*/

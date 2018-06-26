@@ -13,9 +13,11 @@ in vec2 v_Uv;
 uniform sampler2D t_Position;
 uniform sampler2D t_Normal;
 uniform sampler2D t_Color;
+uniform sampler2D t_DirShadowMap;
 
 uniform u_Locals {
 	vec4 u_EyePos;
+	mat4 u_DirLightSpaceMatrix;
 };
 
 uniform u_Material {
@@ -52,19 +54,31 @@ void main() {
  	vec3 viewDir = normalize(vec3(u_EyePos) - fragPos);
  
  	vec4 result = vec4(0.0, 0.0, 0.0, 1.0);
+
+	// Calculate shadow factor for the single directional light shadow source (must be at index 0)
+	float dirShadowFactor = DirShadowFactor(
+			dirLights[0],
+			u_DirLightSpaceMatrix * vec4(fragPos, 1.0),
+			norm
+			);
  
  	int i;
  
  	// Calculate directional lights
  	for (i = 0; i < MAX_DIR_LIGHTS; i++) {
-		float shadowFactor = 1.0;
+		// Equivalent to this, but without the branch
+		// float shadowFactor = 1.0;
+		// if (dirLights[i].has_shadows > 0.0) {
+		//     shadowFactor = dirShadowFactor;
+		// }
+		float shadowFactor = 1.0 - ((1.0 - dirShadowFactor) * dirLights[i].has_shadows);
  		vec4 light = CalcDirLight(
 				dirLights[i],
 				norm,
 				viewDir,
 				diffuse,
 				specular,
-				1.0
+				shadowFactor
 			);
 		result += light * dirLights[i].enabled;
  	}
@@ -81,6 +95,7 @@ void main() {
 				specular,
 				1.0
 			);
+		
 		result += light * pointLights[i].enabled;
  	}
  	
@@ -101,5 +116,4 @@ void main() {
  	}
  
  	Target0 = vec4(result.xyz, 1.0);
-	Target0.xyz = diffuse.xyz;
 }

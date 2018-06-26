@@ -7,7 +7,10 @@ struct DirLight {
 	vec4 diffuse;
 	vec4 specular;
 
+	float has_shadows;
 	float enabled;
+	
+	vec2 _padding;
 };
 
 vec4 CalcDirLight(
@@ -38,22 +41,22 @@ vec4 CalcDirLight(
 }
 
 // Returns 0.0 if the provided position is in a shadow from the provided light, or 1.0 otherwise
-/*float ShadowFactor(DirLight light, vec4 fragPosLightSpace, vec3 normal) {*/
-	//vec3 lightDir = normalize(-light.direction.xyz);
+float DirShadowFactor(DirLight light, vec4 fragPosLightSpace, vec3 normal) {
+	vec3 lightDir = normalize(-light.direction.xyz);
 
-	//vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-	//projCoords = projCoords * 0.5 + 0.5;
+	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+	projCoords = projCoords * 0.5 + 0.5;
 
-	//// TODO: Fix peter panning
-	//float bias = max(0.01 * (1.0 - dot(normal, lightDir)), 0.001);
-	//float depth = projCoords.z - bias;
+	// TODO: Fix peter panning
+	float bias = max(0.01 * (1.0 - dot(normal, lightDir)), 0.001);
+	float depth = projCoords.z - bias;
 
-	//vec2 texelSize = 1.0 / textureSize(t_ShadowMap, 0);
-	//float shadow = SampleShadowMapLinear(t_ShadowMap, projCoords.xy, depth, texelSize);
+	vec2 texelSize = 1.0 / textureSize(t_DirShadowMap, 0);
+	float shadow = SampleShadowMapLinear(t_DirShadowMap, projCoords.xy, depth, texelSize);
 
-	//if (projCoords.z > 1.0) {
-		//shadow = 1.0;
-	//}
+	if (projCoords.z > 1.0) {
+		shadow = 1.0;
+	}
 
-	//return shadow;
-/*}*/
+	return shadow;
+}

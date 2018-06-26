@@ -1,3 +1,6 @@
+mtllib wood.mtl
+usemtl Material.000
+s off
 # Vertices
 v -0.5 0.5 -0.5
 v -0.5 0.5 0.5
