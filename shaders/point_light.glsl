@@ -50,9 +50,5 @@ vec4 CalcPointLight(
 	diffuse *= attenuation;
 	specular *= attenuation;
 
-	//if (specular.x > 0.0) {
-		//return vec4(1.0, 0.0, 0.0, 1.0);
-	//}
-
 	return (ambient + (diffuse + specular) * shadowFactor);
 }

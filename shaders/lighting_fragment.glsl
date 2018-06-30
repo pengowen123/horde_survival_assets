@@ -55,7 +55,8 @@ void main() {
  
  	vec4 result = vec4(0.0, 0.0, 0.0, 1.0);
 
-	// Calculate shadow factor for the single directional light shadow source (must be at index 0)
+	// Calculate shadow factor for the single directional light shadow source
+	// (NOTE: the light must be at index 0)
 	float dirShadowFactor = DirShadowFactor(
 			dirLights[0],
 			u_DirLightSpaceMatrix * vec4(fragPos, 1.0),
