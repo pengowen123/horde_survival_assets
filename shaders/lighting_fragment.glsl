@@ -4,10 +4,6 @@
 //
 // The implementation of lighting calculations for each light type are in their respective shaders
 
-#define MAX_DIR_LIGHTS 4
-#define MAX_POINT_LIGHTS 4
-#define MAX_SPOT_LIGHTS 4
-
 in vec2 v_Uv;
 
 uniform sampler2D t_Position;
