@@ -1,8 +1,8 @@
+#version 150 core
+
 // Lighting pass shader
 //
 // The implementation of lighting calculations for each light type are in their respective shaders
-
-#version 150 core
 
 #define MAX_DIR_LIGHTS 4
 #define MAX_POINT_LIGHTS 4
@@ -57,11 +57,13 @@ void main() {
 
 	// Calculate shadow factor for the single directional light shadow source
 	// (NOTE: the light must be at index 0)
+	#if SHADOWS_ENABLED == 1
 	float dirShadowFactor = DirShadowFactor(
 			dirLights[0],
 			u_DirLightSpaceMatrix * vec4(fragPos, 1.0),
 			norm
 			);
+	#endif
  
  	int i;
  
@@ -72,14 +74,20 @@ void main() {
 		// if (dirLights[i].has_shadows > 0.0) {
 		//     shadowFactor = dirShadowFactor;
 		// }
+		#if SHADOWS_ENABLED == 1
 		float shadowFactor = 1.0 - ((1.0 - dirShadowFactor) * dirLights[i].has_shadows);
+		#endif
  		vec4 light = CalcDirLight(
 				dirLights[i],
 				norm,
 				viewDir,
 				diffuse,
+				#if SHADOWS_ENABLED == 1
 				specular,
 				shadowFactor
+				#else
+				specular
+				#endif
 			);
 		result += light * dirLights[i].enabled;
  	}

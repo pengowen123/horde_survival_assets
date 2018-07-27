@@ -12,6 +12,7 @@ out vec4 Target0;
 const float offset = 1.0 / 300.0;
 
 void main() {
+	#if POSTPROCESSING_ENABLED == 1
 	vec2 offsets[9] = vec2[](
 		vec2(-offset,  offset),
 		vec2( 0.0,	   offset),
@@ -25,9 +26,9 @@ void main() {
 	);
 
 	float kernel[9] = float[](
-		-0.0, -0.0, -0.0,
-		-0.0, 1.0, -0.0,
-		-0.0, -0.0, -0.0
+		0.0, 0.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 0.0, 0.0
     );
 
 	vec3 sampleTex[9];
@@ -44,4 +45,7 @@ void main() {
 	}
 
 	Target0 = vec4(color, 1.0);
+	#else
+	Target0 = vec4(texture(t_Screen, v_Uv.xy).xyz, 1.0);
+	#endif
 }

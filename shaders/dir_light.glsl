@@ -18,8 +18,12 @@ vec4 CalcDirLight(
 		vec3 normal,
 		vec3 viewDir,
 		vec4 t_diffuse,
+		#if SHADOWS_ENABLED == 1
 		float t_specular,
 		float shadowFactor
+		#else
+		float t_specular
+		#endif
 	) {
 
 	vec3 lightDir = normalize(-light.direction.xyz);
@@ -37,10 +41,15 @@ vec4 CalcDirLight(
 	vec4 specular = light.specular * (spec * t_specular);
 
 	// Sum all lights and apply shadows
+	#if SHADOWS_ENABLED == 1
 	return (ambient + (diffuse + specular) * shadowFactor);
+	#else
+	return ambient + (diffuse + specular);
+	#endif
 }
 
 // Returns 0.0 if the provided position is in a shadow from the provided light, or 1.0 otherwise
+#if SHADOWS_ENABLED == 1
 float DirShadowFactor(DirLight light, vec4 fragPosLightSpace, vec3 normal) {
 	vec3 lightDir = normalize(-light.direction.xyz);
 
@@ -60,3 +69,4 @@ float DirShadowFactor(DirLight light, vec4 fragPosLightSpace, vec3 normal) {
 
 	return shadow;
 }
+#endif
