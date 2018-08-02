@@ -20,10 +20,10 @@ uniform u_Material {
 	float u_Material_shininess;
 };
 
-#include "sampling"
-#include "dir_light"
-#include "point_light"
-#include "spot_light"
+#include "sampling.glsl"
+#include "dir_light.glsl"
+#include "point_light.glsl"
+#include "spot_light.glsl"
 
 uniform u_DirLights {
 	DirLight dirLights[MAX_DIR_LIGHTS];
