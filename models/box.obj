@@ -1,6 +1,5 @@
 mtllib wood.mtl
-usemtl Material.000
-s off
+o Box
 # Vertices
 v -0.5 0.5 -0.5
 v -0.5 0.5 0.5
@@ -25,9 +24,8 @@ vn 0 1 0
 vn 0 0 -1
 vn 0 0 1
 
-
-g cube
-
+usemtl Material.000
+s off
 # Faces (vertex/texcoord/normal)
 # -X face
 f 6/4/1 2/3/1 1/2/1
