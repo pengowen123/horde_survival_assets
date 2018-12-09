@@ -1,8 +1,8 @@
 #version 150
 
 in vec3 a_Pos;
+in vec2 a_Uv;
 in vec3 a_Translate;
-in uint a_Color;
 in float a_Alpha;
 
 uniform u_Locals {
@@ -12,7 +12,8 @@ uniform u_Locals {
     float u_Scale;
 };
 
-out vec4 v_Color;
+out vec2 v_Uv;
+out float v_Alpha;
 
 void main() {
     gl_Position = u_ViewProj * vec4(
@@ -22,12 +23,6 @@ void main() {
         1.0
     );
 
-    uint u8mask = 0x000000FFu;
-    v_Color = vec4(
-        float((a_Color >> 16) & u8mask),
-        float((a_Color >>  8) & u8mask),
-        float( a_Color & u8mask),
-        0.0
-    ) / 255.0;
-    v_Color.a = a_Alpha;
+    v_Uv = a_Uv;
+    v_Alpha = a_Alpha;
 }

@@ -1,9 +1,13 @@
 #version 150
 
-in vec4 v_Color;
+uniform sampler2D u_Texture;
+
+in vec2 v_Uv;
+in float v_Alpha;
 
 out vec4 Target0;
 
 void main() {
-    gl_FragColor = v_Color;
+    vec4 color = texture(u_Texture, v_Uv);
+    gl_FragColor = vec4(color.xyz, color.a * v_Alpha);
 }
