@@ -16,8 +16,8 @@ uniform sampler2D t_Diffuse;
 uniform sampler2D t_Specular;
 
 void main() {
-	Target0 = vec4(v_FragPos, 1.0);
-	Target1 = vec4(normalize(v_Normal), 1.0);
-	Target2.rgb = texture(t_Diffuse, v_Uv).rgb;
-	Target2.a = texture(t_Specular, v_Uv).r;
+    Target0 = vec4(v_FragPos, 1.0);
+    Target1 = vec4(normalize(v_Normal), 1.0);
+    Target2.rgb = texture(t_Diffuse, v_Uv).rgb;
+    Target2.a = texture(t_Specular, v_Uv).r;
 }

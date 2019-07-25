@@ -9,18 +9,19 @@ out vec3 v_Normal;
 out vec2 v_Uv;
 
 uniform u_Locals {
-	mat4 u_Model;
-	mat4 u_ViewProj;
+    mat4 u_Model;
+    mat4 u_ViewProj;
 };
 
 void main() {
-	vec4 worldPos = u_Model * vec4(a_Pos, 1.0);
+    vec4 worldPos = u_Model * vec4(a_Pos, 1.0);
 
-	v_FragPos = worldPos.xyz;
-	v_Uv = a_Uv;
+    v_FragPos = worldPos.xyz;
+    v_Uv = a_Uv;
 
-	mat3 normalMatrix = inverse(transpose(mat3(u_Model)));
-	v_Normal = normalMatrix * a_Normal;
+    // TODO: Make this a uniform to avoid recalculating per vertex
+    mat3 normalMatrix = inverse(transpose(mat3(u_Model)));
+    v_Normal = normalMatrix * a_Normal;
 
-	gl_Position = u_ViewProj * worldPos;
+    gl_Position = u_ViewProj * worldPos;
 }

@@ -1,8 +1,8 @@
 #version 330
 
 uniform u_Locals {
-	mat4 u_Proj;
-	mat4 u_View;
+    mat4 u_Proj;
+    mat4 u_View;
 };
 
 in vec4 a_Pos;
